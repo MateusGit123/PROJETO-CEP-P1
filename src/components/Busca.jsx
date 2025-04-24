@@ -7,12 +7,20 @@ function Busca() {
   const [cep, setCep] = useState('');
 
   const buscarEndereco = async () => {
-    alert(`CEP digitado: ${cep}`);
-    
+    if (!cep || cep.length !== 8 || !/^\d+$/.test(cep)) {
+      alert('Por favor, digite um CEP válido com 8 números.');
+      return;
+    }
+
     try {
       const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
-      console.log(response.data);
+      if (response.data.erro) {
+        alert('CEP não encontrado. Tente novamente.');
+      } else {
+        console.log(response.data);
+      }
     } catch (error) {
+      alert('Erro na requisição. Verifique sua conexão.');
       console.error('Erro ao buscar o CEP:', error);
     }
   };
